@@ -1,0 +1,97 @@
+.mdc-header {
+  background: var(--surface);
+  border-bottom: 2px solid var(--primary);
+  padding: 12px 24px;
+  box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  .mdc-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .mdc-logo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .mdc-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    svg {
+      filter: drop-shadow(0 2px 4px rgba(0, 102, 204, 0.2));
+    }
+  }
+
+  .mdc-title {
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      line-height: 1.2;
+      font-family: var(--font-family);
+    }
+
+    .mdc-subtitle {
+      margin: 0;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+
+  .mdc-attribution {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+
+    .attribution-text {
+      font-size: 13px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-family: var(--font-family);
+    }
+
+    .attribution-purpose {
+      font-size: 11px;
+      color: var(--secondary);
+      font-weight: 500;
+      font-style: italic;
+    }
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    padding: 12px 16px;
+
+    .mdc-header-content {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .mdc-attribution {
+      align-items: flex-start;
+      width: 100%;
+    }
+
+    .mdc-title h1 {
+      font-size: 18px;
+    }
+  }
+}
+
+

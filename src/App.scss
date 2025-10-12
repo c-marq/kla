@@ -1,0 +1,207 @@
+:root {
+  /* 
+   * Miami Dade College - AI Assignment Assistant
+   * Designed for Neurodivergent Students
+   * Created by Professor Marquez
+   * 
+   * Color Rationale:
+   * - MDC Blue: Trust, focus, calmness (reduces anxiety)
+   * - MDC Orange: Energy, motivation, warmth (encourages engagement)
+   * - High contrast for readability (WCAG AAA compliance)
+   * - Reduced saturation to minimize visual overstimulation
+   * - Consistent spacing and predictable patterns for cognitive accessibility
+   */
+
+  /* Miami Dade College Official Brand Colors */
+  --mdc-blue: #0066CC;           /* Primary: MDC Shark Blue - Trust & Focus */
+  --mdc-blue-light: #4D94DB;     /* Lighter blue for hover states */
+  --mdc-blue-lighter: #B3D9FF;   /* Very light blue for backgrounds */
+  --mdc-orange: #FF6600;         /* Secondary: MDC Orange - Energy & Motivation */
+  --mdc-orange-light: #FF9944;   /* Lighter orange for hover states */
+  --mdc-orange-lighter: #FFE0CC; /* Very light orange for backgrounds */
+  
+  /* Neurodivergent-Friendly Supporting Colors */
+  --success-green: #2D7A3E;      /* Success: Calm green (not too bright) */
+  --success-light: #D4EDDA;      /* Light success background */
+  --focus-purple: #7B68B8;       /* Focus mode: Calming purple */
+  --focus-light: #E8E3F3;        /* Light purple background */
+  --warning-amber: #E67E22;      /* Warning: Warm amber (less alarming than red) */
+  --warning-light: #FCF3E8;      /* Light warning background */
+  
+  /* Accessible Neutrals (High Contrast) */
+  --text-primary: #1A1A1A;       /* Dark text for maximum readability */
+  --text-secondary: #4A4A4A;     /* Secondary text */
+  --text-tertiary: #6C757D;      /* Tertiary text */
+  --background: #FAFAFA;         /* Off-white (reduces eye strain vs pure white) */
+  --surface: #FFFFFF;            /* Pure white for cards/panels */
+  --border: #D1D5DB;             /* Subtle borders */
+  --border-focus: var(--mdc-blue); /* Focus state borders */
+  
+  /* Semantic Brand Colors */
+  --primary: var(--mdc-blue);
+  --primary-light: var(--mdc-blue-light);
+  --primary-lighter: var(--mdc-blue-lighter);
+  --secondary: var(--mdc-orange);
+  --secondary-light: var(--mdc-orange-light);
+  --secondary-lighter: var(--mdc-orange-lighter);
+  --accent: var(--focus-purple);
+  --accent-light: var(--focus-light);
+  
+  /* Semantic States */
+  --success: var(--success-green);
+  --success-bg: var(--success-light);
+  --warning: var(--warning-amber);
+  --warning-bg: var(--warning-light);
+  --danger: #C53030;
+  --danger-light: #FED7D7;
+  --info: var(--mdc-blue);
+  --info-light: var(--mdc-blue-lighter);
+
+  --color: var(--text-primary);
+  scrollbar-color: var(--mdc-blue) var(--border);
+  scrollbar-width: thin;
+  --font-family: "Space Mono", monospace;
+
+  /* Standardized Neutrals for Components */
+  --Neutral-00: var(--surface);
+  --Neutral-5: #F9FAFB;
+  --Neutral-10: #F3F4F6;
+  --Neutral-15: #E5E7EB;
+  --Neutral-20: var(--border);
+  --Neutral-30: #9CA3AF;
+  --Neutral-50: var(--text-tertiary);
+  --Neutral-60: var(--text-secondary);
+  --Neutral-80: #2D3748;
+  --Neutral-90: var(--text-primary);
+
+  /* Legacy Support (mapped to new system) */
+  --Green-500: var(--success);
+  --Green-700: #1E5F2E;
+  --Blue-400: var(--mdc-blue-light);
+  --Blue-500: var(--mdc-blue);
+  --Blue-800: #004C99;
+  --Red-400: #FC8181;
+  --Red-500: var(--danger);
+  --Red-600: #C53030;
+  --Red-700: #9B2C2C;
+}
+
+body {
+  font-family: "Space Mono", monospace;
+  background: var(--background);
+  color: var(--color);
+}
+
+.material-symbols-outlined {
+  &.filled {
+    font-variation-settings:
+      "FILL" 1,
+      "wght" 400,
+      "GRAD" 0,
+      "opsz" 24;
+  }
+}
+
+.space-mono-regular {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.space-mono-bold {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.space-mono-regular-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.space-mono-bold-italic {
+  font-family: "Space Mono", monospace;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.hidden {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.h-screen-full {
+  height: 100vh;
+}
+
+.w-screen-full {
+  width: 100vw;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+}
+
+.streaming-console {
+  background: var(--background);
+  color: var(--color);
+  display: flex;
+  height: calc(100vh - 72px); /* Subtract header height */
+  width: 100vw;
+
+  a,
+  a:visited,
+  a:active {
+    color: var(--primary);
+  }
+
+  .disabled {
+    pointer-events: none;
+
+    > * {
+      pointer-events: none;
+    }
+  }
+
+  main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    gap: 1rem;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .main-app-area {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .function-call {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 50%;
+    overflow-y: auto;
+  }
+}
+
+/* video player */
+.stream {
+  flex-grow: 1;
+  max-width: 90%;
+  border-radius: 32px;
+  max-height: fit-content;
+}
