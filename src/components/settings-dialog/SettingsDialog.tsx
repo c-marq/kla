@@ -2,6 +2,7 @@ import {
   ChangeEvent,
   FormEventHandler,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -18,6 +19,18 @@ type FunctionDeclarationsTool = Tool & {
 export default function SettingsDialog() {
   const [open, setOpen] = useState(false);
   const { config, setConfig, connected } = useLiveAPIContext();
+
+  // Close dialog on Escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && open) {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [open]);
   const functionDeclarations: FunctionDeclaration[] = useMemo(() => {
     if (!Array.isArray(config.tools)) {
       return [];
@@ -93,14 +106,26 @@ export default function SettingsDialog() {
 
   return (
     <div className="settings-dialog">
-      <button
-        className="action-button material-symbols-outlined"
-        onClick={() => setOpen(!open)}
-      >
-        settings
-      </button>
+      <div className="button-with-label">
+        <button
+          className="action-button material-symbols-outlined"
+          onClick={() => setOpen(!open)}
+          aria-label="Settings"
+        >
+          settings
+        </button>
+        <span className="button-label">Settings</span>
+      </div>
+      {open && <div className="dialog-backdrop" onClick={() => setOpen(false)} />}
       <dialog className="dialog" style={{ display: open ? "block" : "none" }}>
         <div className={`dialog-container ${connected ? "disabled" : ""}`}>
+          <button 
+            className="dialog-close-button" 
+            onClick={() => setOpen(false)}
+            aria-label="Close settings"
+          >
+            <span className="material-symbols-outlined">close</span>
+          </button>
           {connected && (
             <div className="connected-indicator">
               <p>

@@ -10,9 +10,9 @@
   cursor: pointer;
   animation: opacity-pulse 3s ease-in infinite;
   transition: all 0.2s ease-in-out;
-  width: 48px;
-  height: 48px;
-  border-radius: 18px;
+  width: 56px; /* Increased from 48px for easier clicking */
+  height: 56px; /* Increased from 48px */
+  border-radius: 20px; /* Increased from 18px */
   border: 1px solid var(--Neutral-20);
   user-select: none;
   cursor: pointer;
@@ -84,6 +84,24 @@
     box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
   }
 
+  /* Pulsing animation when active/listening */
+  &.listening {
+    animation: gentle-pulse 2s ease-in-out infinite;
+    
+    &:after {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: -8px;
+      right: -8px;
+      bottom: -8px;
+      border: 2px solid var(--primary);
+      border-radius: 28px;
+      animation: pulse-ring 2s ease-in-out infinite;
+      opacity: 0;
+    }
+  }
+
   &:before {
     position: absolute;
     z-index: -1;
@@ -97,6 +115,30 @@
     height: calc(100% + var(--volume) * 2);
     border-radius: 24px;
     transition: all 0.02s ease-in-out;
+  }
+}
+
+/* Gentle pulsing animation for microphone */
+@keyframes gentle-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(255, 107, 107, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+  }
+}
+
+/* Expanding ring animation */
+@keyframes pulse-ring {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
   }
 }
 
@@ -124,11 +166,12 @@
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
-  display: inline-flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 8px;
-  padding-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 32px;
+  padding-top: 16px;
 
   .disabled .action-button,
   .action-button.disabled {
@@ -143,40 +186,134 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 12px;
 
     .connection-button-container {
-      border-radius: 27px;
-      border: 1px solid var(--secondary);
+      border-radius: 40px;
+      border: 2px solid var(--secondary);
       background: var(--Neutral-5);
-      padding: 10px;
-      box-shadow: 0 2px 4px rgba(78, 205, 196, 0.1);
-    }
+      padding: 6px;
+      box-shadow: 0 4px 8px rgba(78, 205, 196, 0.15);
+      transition: all 0.3s ease;
 
-    .text-indicator {
-      font-size: 11px;
-      color: var(--success);
-      user-select: none;
-      font-weight: 600;
-    }
-
-    &:not(.connected) {
-      .text-indicator {
-        opacity: 0;
+      &.primary-action {
+        /* Make primary button stand out */
+        border-width: 3px;
+        animation: subtle-glow 3s ease-in-out infinite;
       }
     }
+
+    /* Larger primary button (play/pause) */
+    .primary-button {
+      width: 72px !important;
+      height: 72px !important;
+      font-size: 2rem;
+
+      .material-symbols-outlined {
+        font-size: 40px;
+      }
+    }
+
+    .status-message {
+      font-size: 16px;
+      color: var(--text-primary);
+      user-select: none;
+      font-weight: 700;
+      font-family: var(--font-family);
+      text-align: center;
+    }
+
+    .help-message {
+      font-size: 13px;
+      color: var(--text-secondary);
+      user-select: none;
+      font-weight: 500;
+      font-family: var(--font-family);
+      text-align: center;
+      font-style: italic;
+    }
+  }
+
+  /* Helper text above buttons */
+  .helper-text {
+    background: var(--secondary-lighter);
+    border: 2px solid var(--secondary);
+    border-radius: 16px;
+    padding: 12px 24px;
+    box-shadow: 0 2px 8px rgba(78, 205, 196, 0.15);
+    animation: fadeIn 0.5s ease-out;
+
+    .helper-message {
+      font-size: 14px;
+      color: var(--secondary);
+      font-weight: 600;
+      font-family: var(--font-family);
+      text-align: center;
+      user-select: none;
+    }
+  }
+
+  /* Button with label container */
+  .button-with-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+
+    .button-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      user-select: none;
+      font-family: var(--font-family);
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .action-button.active {
+      background: var(--success);
+      color: var(--surface);
+
+      &:hover {
+        background: var(--success-green);
+      }
+    }
+  }
+}
+
+/* Subtle glow animation for primary button */
+@keyframes subtle-glow {
+  0%, 100% {
+    box-shadow: 0 4px 8px rgba(78, 205, 196, 0.15);
+  }
+  50% {
+    box-shadow: 0 6px 16px rgba(78, 205, 196, 0.3);
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 .actions-nav {
   background: var(--Neutral-5);
   border: 1px solid var(--secondary);
-  border-radius: 27px;
+  border-radius: 30px; /* Increased from 27px */
   display: inline-flex;
-  gap: 12px;
+  gap: 16px; /* Increased from 12px */
   align-items: center;
   overflow: clip;
-  padding: 10px;
+  padding: 14px; /* Increased from 10px */
   box-shadow: 0 4px 8px rgba(78, 205, 196, 0.1);
   backdrop-filter: blur(10px);
 

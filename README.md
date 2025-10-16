@@ -133,6 +133,8 @@ This tool is designed to:
 - Build student confidence and independence
 - Track engagement (future feature)
 
+**Developer Console**: Press `Ctrl+Shift+D` (or `Cmd+Shift+D` on Mac) to access technical logs and debugging tools. Hidden by default to keep the interface clean for students. See [DEVELOPER_MODE.md](./DEVELOPER_MODE.md) for details.
+
 ---
 
 ## 🏫 Miami Dade College Integration
@@ -298,6 +300,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 - **[DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md)** - Complete design rationale and guidelines
 - **[COLOR_PALETTE.md](./COLOR_PALETTE.md)** - Color system reference
 - **[README_MDC.md](./README_MDC.md)** - Additional MDC-specific documentation
+- **[DEVELOPER_MODE.md](./DEVELOPER_MODE.md)** - Developer console (hidden by default)
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)** - How to contribute (if applicable)
 
 ---

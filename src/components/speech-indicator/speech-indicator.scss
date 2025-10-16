@@ -1,0 +1,133 @@
+.speech-indicator {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  animation: slideUp 0.3s ease-out;
+}
+
+.speech-indicator-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border: 2px solid var(--primary);
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+}
+
+.speech-text {
+  font-family: var(--font-family);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--primary);
+  user-select: none;
+}
+
+/* Animated sound waves */
+.sound-waves {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+}
+
+.wave {
+  width: 4px;
+  background: var(--primary);
+  border-radius: 2px;
+  animation: wave-animation 1.2s ease-in-out infinite;
+}
+
+.wave:nth-child(1) {
+  animation-delay: 0s;
+  height: 12px;
+}
+
+.wave:nth-child(2) {
+  animation-delay: 0.1s;
+  height: 20px;
+}
+
+.wave:nth-child(3) {
+  animation-delay: 0.2s;
+  height: 28px;
+}
+
+.wave:nth-child(4) {
+  animation-delay: 0.3s;
+  height: 20px;
+}
+
+.wave:nth-child(5) {
+  animation-delay: 0.4s;
+  height: 12px;
+}
+
+@keyframes wave-animation {
+  0%, 100% {
+    transform: scaleY(0.5);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+/* Processing spinner */
+.processing-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--primary-lighter);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .speech-indicator {
+    bottom: 100px;
+  }
+
+  .speech-indicator-content {
+    padding: 12px 20px;
+    gap: 12px;
+  }
+
+  .speech-text {
+    font-size: 14px;
+  }
+
+  .sound-waves {
+    height: 24px;
+  }
+
+  .processing-spinner {
+    width: 24px;
+    height: 24px;
+  }
+}
+

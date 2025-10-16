@@ -1,7 +1,7 @@
 .mdc-header {
   background: var(--surface);
   border-bottom: 2px solid var(--primary);
-  padding: 12px 24px;
+  padding: 20px 32px; /* Increased from 12px 24px for more breathing room */
   box-shadow: 0 2px 4px rgba(0, 102, 204, 0.1);
   position: sticky;
   top: 0;
@@ -13,14 +13,14 @@
     align-items: center;
     max-width: 1400px;
     margin: 0 auto;
-    gap: 16px;
+    gap: 24px; /* Increased from 16px */
     flex-wrap: wrap;
   }
 
   .mdc-logo-section {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px; /* Increased from 16px */
   }
 
   .mdc-logo {
@@ -53,11 +53,17 @@
     }
   }
 
+  .mdc-header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
   .mdc-attribution {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 2px;
+    gap: 6px; /* Increased from 2px for better readability */
 
     .attribution-text {
       font-size: 13px;
@@ -71,6 +77,33 @@
       color: var(--secondary);
       font-weight: 500;
       font-style: italic;
+    }
+  }
+
+  /* Developer mode hint */
+  .dev-mode-hint {
+    position: absolute;
+    top: 100%;
+    right: 24px;
+    background: var(--primary);
+    color: var(--surface);
+    padding: 8px 16px;
+    border-radius: 0 0 8px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(0, 102, 204, 0.2);
+    animation: slideDown 0.3s ease-out;
+    z-index: 99;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 
@@ -90,6 +123,12 @@
 
     .mdc-title h1 {
       font-size: 18px;
+    }
+
+    .dev-mode-hint {
+      right: 16px;
+      font-size: 11px;
+      padding: 6px 12px;
     }
   }
 }

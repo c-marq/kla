@@ -40,22 +40,27 @@ type MediaStreamButtonProps = {
   offIcon: string;
   start: () => Promise<any>;
   stop: () => any;
+  label: string;
+  activeLabel?: string;
 };
 
 /**
  * button used for triggering webcam or screen-capture
  */
 const MediaStreamButton = memo(
-  ({ isStreaming, onIcon, offIcon, start, stop }: MediaStreamButtonProps) =>
-    isStreaming ? (
-      <button className="action-button" onClick={stop}>
-        <span className="material-symbols-outlined">{onIcon}</span>
-      </button>
-    ) : (
-      <button className="action-button" onClick={start}>
-        <span className="material-symbols-outlined">{offIcon}</span>
-      </button>
-    )
+  ({ isStreaming, onIcon, offIcon, start, stop, label, activeLabel }: MediaStreamButtonProps) =>
+    <div className="button-with-label">
+      {isStreaming ? (
+        <button className="action-button active" onClick={stop} aria-label={activeLabel || label}>
+          <span className="material-symbols-outlined">{onIcon}</span>
+        </button>
+      ) : (
+        <button className="action-button" onClick={start} aria-label={label}>
+          <span className="material-symbols-outlined">{offIcon}</span>
+        </button>
+      )}
+      <span className="button-label">{isStreaming && activeLabel ? activeLabel : label}</span>
+    </div>
 );
 
 function ControlTray({
@@ -124,22 +129,52 @@ function ControlTray({
         return;
       }
 
+      // Wait for video to have dimensions before capturing
+      if (video.videoWidth === 0 || video.videoHeight === 0) {
+        // Video not ready yet, try again soon
+        if (connected) {
+          timeoutId = window.setTimeout(sendVideoFrame, 100);
+        }
+        return;
+      }
+
       const ctx = canvas.getContext("2d")!;
       canvas.width = video.videoWidth * 0.25;
       canvas.height = video.videoHeight * 0.25;
+      
       if (canvas.width + canvas.height > 0) {
-        ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        // Clear canvas first
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Draw the video frame
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         const base64 = canvas.toDataURL("image/jpeg", 1.0);
         const data = base64.slice(base64.indexOf(",") + 1, Infinity);
         client.sendRealtimeInput([{ mimeType: "image/jpeg", data }]);
       }
+      
       if (connected) {
         timeoutId = window.setTimeout(sendVideoFrame, 1000 / 0.5);
       }
     }
+    
     if (connected && activeVideoStream !== null) {
-      requestAnimationFrame(sendVideoFrame);
+      // Wait for video element to load metadata before capturing
+      const video = videoRef.current;
+      if (video) {
+        const startCapture = () => {
+          requestAnimationFrame(sendVideoFrame);
+        };
+        
+        if (video.readyState >= 2) {
+          // Video has enough data, start immediately
+          startCapture();
+        } else {
+          // Wait for loadedmetadata event
+          video.addEventListener('loadedmetadata', startCapture, { once: true });
+        }
+      }
     }
+    
     return () => {
       clearTimeout(timeoutId);
     };
@@ -159,23 +194,56 @@ function ControlTray({
     videoStreams.filter((msr) => msr !== next).forEach((msr) => msr.stop());
   };
 
+  // Friendly status messages
+  const getStatusMessage = () => {
+    if (connected) {
+      return "Connected - I'm listening!";
+    }
+    return "Ready to Listen";
+  };
+
+  const getHelpMessage = () => {
+    if (!connected) {
+      return "Press the play button and ask me anything!";
+    }
+    if (muted) {
+      return "Microphone is muted - click to unmute";
+    }
+    return "Speak clearly, I'm here to help";
+  };
+
   return (
     <section className="control-tray">
       <canvas style={{ display: "none" }} ref={renderCanvasRef} />
-      <nav className={cn("actions-nav", { disabled: !connected })}>
-        <button
-          className={cn("action-button mic-button")}
-          onClick={() => setMuted(!muted)}
-        >
-          {!muted ? (
-            <span className="material-symbols-outlined filled">mic</span>
-          ) : (
-            <span className="material-symbols-outlined filled">mic_off</span>
-          )}
-        </button>
+      
+      {/* Friendly helper text */}
+      {!connected && (
+        <div className="helper-text">
+          <span className="helper-message">{getHelpMessage()}</span>
+        </div>
+      )}
 
-        <div className="action-button no-action outlined">
-          <AudioPulse volume={volume} active={connected} hover={false} />
+      <nav className={cn("actions-nav", { disabled: !connected })}>
+        <div className="button-with-label">
+          <button
+            className={cn("action-button mic-button", { muted, listening: connected && !muted })}
+            onClick={() => setMuted(!muted)}
+            aria-label={muted ? "Unmute microphone" : "Mute microphone"}
+          >
+            {!muted ? (
+              <span className="material-symbols-outlined filled">mic</span>
+            ) : (
+              <span className="material-symbols-outlined filled">mic_off</span>
+            )}
+          </button>
+          <span className="button-label">{muted ? "Muted" : "Microphone"}</span>
+        </div>
+
+        <div className="button-with-label">
+          <div className="action-button no-action outlined">
+            <AudioPulse volume={volume} active={connected} hover={false} />
+          </div>
+          <span className="button-label">Volume</span>
         </div>
 
         {supportsVideo && (
@@ -186,6 +254,8 @@ function ControlTray({
               stop={changeStreams()}
               onIcon="cancel_presentation"
               offIcon="present_to_all"
+              label="Screen Share"
+              activeLabel="Stop Sharing"
             />
             <MediaStreamButton
               isStreaming={webcam.isStreaming}
@@ -193,6 +263,8 @@ function ControlTray({
               stop={changeStreams()}
               onIcon="videocam_off"
               offIcon="videocam"
+              label="Camera"
+              activeLabel="Stop Camera"
             />
           </>
         )}
@@ -200,18 +272,22 @@ function ControlTray({
       </nav>
 
       <div className={cn("connection-container", { connected })}>
-        <div className="connection-button-container">
+        <div className="connection-button-container primary-action">
           <button
             ref={connectButtonRef}
-            className={cn("action-button connect-toggle", { connected })}
+            className={cn("action-button connect-toggle primary-button", { connected })}
             onClick={connected ? disconnect : connect}
+            aria-label={connected ? "Pause conversation" : "Start conversation"}
           >
             <span className="material-symbols-outlined filled">
               {connected ? "pause" : "play_arrow"}
             </span>
           </button>
         </div>
-        <span className="text-indicator">Streaming</span>
+        <span className="status-message">{getStatusMessage()}</span>
+        {connected && (
+          <span className="help-message">{getHelpMessage()}</span>
+        )}
       </div>
       {enableEditingSettings ? <SettingsDialog /> : ""}
     </section>

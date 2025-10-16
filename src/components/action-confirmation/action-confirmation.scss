@@ -1,0 +1,103 @@
+.action-confirmation {
+  position: fixed;
+  top: 100px;
+  right: 32px;
+  z-index: 200;
+  opacity: 0;
+  transform: translateX(400px);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  &.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.confirmation-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--surface);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid var(--success);
+  min-width: 280px;
+  max-width: 400px;
+}
+
+.confirmation-icon {
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.confirmation-message {
+  font-family: var(--font-family);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+/* Type-specific styling */
+.action-confirmation.success {
+  .confirmation-content {
+    border-left-color: var(--success);
+  }
+  
+  .confirmation-icon {
+    color: var(--success);
+  }
+}
+
+.action-confirmation.info {
+  .confirmation-content {
+    border-left-color: var(--primary);
+  }
+  
+  .confirmation-icon {
+    color: var(--primary);
+  }
+}
+
+.action-confirmation.warning {
+  .confirmation-content {
+    border-left-color: var(--warning);
+  }
+  
+  .confirmation-icon {
+    color: var(--warning);
+  }
+}
+
+.action-confirmation.error {
+  .confirmation-content {
+    border-left-color: var(--danger);
+  }
+  
+  .confirmation-icon {
+    color: var(--danger);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .action-confirmation {
+    top: 80px;
+    right: 16px;
+    left: 16px;
+  }
+
+  .confirmation-content {
+    min-width: auto;
+    max-width: 100%;
+  }
+}
+
+/* Dark mode adjustments */
+body.theme-dark {
+  .confirmation-content {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  }
+}
+

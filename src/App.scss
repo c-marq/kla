@@ -12,21 +12,21 @@
    * - Consistent spacing and predictable patterns for cognitive accessibility
    */
 
-  /* Miami Dade College Official Brand Colors */
-  --mdc-blue: #0066CC;           /* Primary: MDC Shark Blue - Trust & Focus */
-  --mdc-blue-light: #4D94DB;     /* Lighter blue for hover states */
-  --mdc-blue-lighter: #B3D9FF;   /* Very light blue for backgrounds */
-  --mdc-orange: #FF6600;         /* Secondary: MDC Orange - Energy & Motivation */
-  --mdc-orange-light: #FF9944;   /* Lighter orange for hover states */
-  --mdc-orange-lighter: #FFE0CC; /* Very light orange for backgrounds */
+  /* Miami Dade College Official Brand Colors - Softened for Neurodivergent Accessibility */
+  --mdc-blue: #3D8BCC;           /* Primary: MDC Shark Blue - Softer, less saturated */
+  --mdc-blue-light: #6BA3DB;     /* Lighter blue for hover states */
+  --mdc-blue-lighter: #C5E0F5;   /* Very light blue for backgrounds */
+  --mdc-orange: #E87D3E;         /* Secondary: MDC Orange - Toned down, warmer */
+  --mdc-orange-light: #F09D66;   /* Lighter orange for hover states */
+  --mdc-orange-lighter: #FFEEE0; /* Very light orange for backgrounds */
   
-  /* Neurodivergent-Friendly Supporting Colors */
-  --success-green: #2D7A3E;      /* Success: Calm green (not too bright) */
-  --success-light: #D4EDDA;      /* Light success background */
-  --focus-purple: #7B68B8;       /* Focus mode: Calming purple */
-  --focus-light: #E8E3F3;        /* Light purple background */
-  --warning-amber: #E67E22;      /* Warning: Warm amber (less alarming than red) */
-  --warning-light: #FCF3E8;      /* Light warning background */
+  /* Neurodivergent-Friendly Supporting Colors - Softened */
+  --success-green: #4A9B5C;      /* Success: Softer, calmer green */
+  --success-light: #E3F2E7;      /* Light success background */
+  --focus-purple: #8B7BC8;       /* Focus mode: Softer calming purple */
+  --focus-light: #EDE9F5;        /* Light purple background */
+  --warning-amber: #D4945A;      /* Warning: Softer warm amber */
+  --warning-light: #FDF6ED;      /* Light warning background */
   
   /* Accessible Neutrals (High Contrast) */
   --text-primary: #1A1A1A;       /* Dark text for maximum readability */
@@ -90,6 +90,73 @@ body {
   font-family: "Space Mono", monospace;
   background: var(--background);
   color: var(--color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* High Contrast Mode */
+body.theme-high-contrast {
+  --text-primary: #000000;
+  --text-secondary: #000000;
+  --background: #FFFFFF;
+  --surface: #FFFFFF;
+  --border: #000000;
+  --mdc-blue: #0052A3;
+  --mdc-orange: #CC5500;
+  --Neutral-5: #F0F0F0;
+  --Neutral-10: #E0E0E0;
+  --Neutral-20: #000000;
+  --Neutral-50: #000000;
+  --Neutral-60: #000000;
+  
+  /* Stronger borders and shadows */
+  * {
+    border-width: 2px !important;
+  }
+  
+  button, .action-button {
+    border: 2px solid #000000 !important;
+    font-weight: 700 !important;
+  }
+}
+
+/* Dark Mode */
+body.theme-dark {
+  --text-primary: #E8E8E8;
+  --text-secondary: #B8B8B8;
+  --text-tertiary: #888888;
+  --background: #1A1A1A;
+  --surface: #242424;
+  --border: #404040;
+  --border-focus: var(--mdc-blue-light);
+  
+  /* Softer colors for dark mode */
+  --mdc-blue: #5B9FD8;
+  --mdc-blue-light: #7DB3E3;
+  --mdc-blue-lighter: #2A4A6B;
+  --mdc-orange: #E89B6A;
+  --mdc-orange-light: #F0B088;
+  --mdc-orange-lighter: #4A3A2E;
+  
+  --success-green: #6BB57D;
+  --success-light: #2A3F2E;
+  --focus-purple: #9B8FD8;
+  --focus-light: #3A3550;
+  --warning-amber: #D4A76A;
+  --warning-light: #4A3F2E;
+  
+  --Neutral-00: #242424;
+  --Neutral-5: #2A2A2A;
+  --Neutral-10: #303030;
+  --Neutral-15: #383838;
+  --Neutral-20: #404040;
+  --Neutral-30: #585858;
+  --Neutral-50: #888888;
+  --Neutral-60: #B8B8B8;
+  --Neutral-80: #D8D8D8;
+  --Neutral-90: #E8E8E8;
+  
+  /* Adjust shadows for dark mode */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
 }
 
 .material-symbols-outlined {
@@ -153,8 +220,15 @@ body {
   background: var(--background);
   color: var(--color);
   display: flex;
-  height: calc(100vh - 72px); /* Subtract header height */
+  height: calc(100vh - 88px); /* Adjusted for increased header padding (was 72px) */
   width: 100vw;
+  
+  /* When side panel is hidden, main area takes full width */
+  &:not(:has(.side-panel)) {
+    main {
+      width: 100%;
+    }
+  }
 
   a,
   a:visited,
@@ -177,9 +251,10 @@ body {
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    gap: 1rem;
+    gap: 2rem; /* Increased from 1rem for more breathing room */
     max-width: 100%;
     overflow: hidden;
+    padding: 2rem; /* Added padding around main content area */
   }
 
   .main-app-area {
@@ -187,6 +262,7 @@ body {
     flex: 1;
     align-items: center;
     justify-content: center;
+    padding: 1.5rem; /* Added internal padding */
   }
 
   .function-call {

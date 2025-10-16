@@ -32,7 +32,8 @@ const filterOptions = [
 
 export default function SidePanel() {
   const { connected, client } = useLiveAPIContext();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false); // Start closed by default
+  const [developerMode, setDeveloperMode] = useState(false); // Developer mode hidden by default
   const loggerRef = useRef<HTMLDivElement>(null);
   const loggerLastHeightRef = useRef<number>(-1);
   const { log, logs } = useLoggerStore();
@@ -64,6 +65,26 @@ export default function SidePanel() {
     };
   }, [client, log]);
 
+  // Developer mode keyboard shortcut: Ctrl+Shift+D (or Cmd+Shift+D on Mac)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        setDeveloperMode((prev) => {
+          const newMode = !prev;
+          console.log(`Developer mode ${newMode ? 'enabled' : 'disabled'}`);
+          if (newMode) {
+            setOpen(true); // Auto-open when enabling developer mode
+          }
+          return newMode;
+        });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleSubmit = () => {
     client.send([{ text: textInput }]);
 
@@ -73,10 +94,15 @@ export default function SidePanel() {
     }
   };
 
+  // Don't render the panel at all if not in developer mode
+  if (!developerMode) {
+    return null;
+  }
+
   return (
     <div className={`side-panel ${open ? "open" : ""}`}>
       <header className="top">
-        <h2>Console</h2>
+        <h2>Developer Console</h2>
         {open ? (
           <button className="opener" onClick={() => setOpen(false)}>
             <RiSidebarFoldLine color="#b4b8bb" />

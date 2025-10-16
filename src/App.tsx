@@ -21,7 +21,7 @@ import SidePanel from "./components/side-panel/SidePanel";
 import { Altair } from "./components/altair/Altair";
 import ControlTray from "./components/control-tray/ControlTray";
 import Header from "./components/header/Header";
-import cn from "classnames";
+import CameraPreview from "./components/camera-preview/CameraPreview";
 import { LiveClientOptions } from "./types";
 
 const API_KEY = process.env.REACT_APP_GEMINI_API_KEY as string;
@@ -39,6 +39,37 @@ function App() {
   const videoRef = useRef<HTMLVideoElement>(null);
   // either the screen capture, the video or null, if null we hide it
   const [videoStream, setVideoStream] = useState<MediaStream | null>(null);
+  // track the type of video stream
+  const [streamType, setStreamType] = useState<'camera' | 'screen' | null>(null);
+
+  // Handler to update video stream and detect type
+  const handleVideoStreamChange = (stream: MediaStream | null) => {
+    setVideoStream(stream);
+    
+    if (stream) {
+      // Detect if it's screen share or camera based on video track label
+      const videoTrack = stream.getVideoTracks()[0];
+      if (videoTrack) {
+        // Screen share tracks typically have labels containing "screen" or "window"
+        const isScreenShare = videoTrack.label.toLowerCase().includes('screen') || 
+                             videoTrack.label.toLowerCase().includes('window') ||
+                             videoTrack.label.toLowerCase().includes('display');
+        setStreamType(isScreenShare ? 'screen' : 'camera');
+      }
+    } else {
+      setStreamType(null);
+    }
+  };
+
+  // Handler to stop video stream and clean up
+  const handleStopVideoStream = () => {
+    if (videoStream) {
+      // Stop all tracks in the stream
+      videoStream.getTracks().forEach(track => track.stop());
+    }
+    setVideoStream(null);
+    setStreamType(null);
+  };
 
   return (
     <div className="App">
@@ -50,20 +81,34 @@ function App() {
             <div className="main-app-area">
               {/* APP goes here */}
               <Altair />
+              {/* Hidden video element for AI processing - not displayed to user */}
               <video
-                className={cn("stream", {
-                  hidden: !videoRef.current || !videoStream,
-                })}
+                style={{ 
+                  position: 'absolute',
+                  width: '1px',
+                  height: '1px',
+                  opacity: 0,
+                  pointerEvents: 'none'
+                }}
                 ref={videoRef}
                 autoPlay
                 playsInline
+                muted
               />
             </div>
+
+            {/* Video preview appears as floating window when active */}
+            <CameraPreview
+              stream={videoStream}
+              isActive={!!videoStream}
+              onClose={handleStopVideoStream}
+              type={streamType || 'camera'}
+            />
 
             <ControlTray
               videoRef={videoRef}
               supportsVideo={true}
-              onVideoStreamChange={setVideoStream}
+              onVideoStreamChange={handleVideoStreamChange}
               enableEditingSettings={true}
             >
               {/* put your own buttons here */}
